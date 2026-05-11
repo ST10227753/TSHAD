@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="assets/TSHAD Logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<title>TSHAD &#8212; Home</title>
+<style>
+/* ── RESET & TOKENS ── */
+:root{
+  --brown:#6B3A1F; --brown-mid:#895129; --cream:#FFFDE4;
+  --white:#fff; --off-white:#F8F5F0; --dark:#111010;
+  --mid:#555; --border:#E0D6CC; --footer-dark:#1A0F08;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--white);color:var(--dark);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-family:'Syne',sans-serif}
+img{display:block;max-width:100%}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* ── NAV ── */
+header.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:var(--white);border-bottom:1px solid var(--border);
+  padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:64px;
+}
+.nav-logo img{height:40px;width:auto}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{
+  font-family:'Syne',sans-serif;font-weight:600;font-size:0.88rem;
+  color:var(--mid);padding:8px 14px;border-radius:999px;transition:.2s;
+}
+.nav-links a:hover{color:var(--dark)}
+.nav-cta{background:var(--brown)!important;color:#fff!important;padding:10px 20px!important;border-radius:999px!important}
+.nav-cta:hover{background:var(--brown-mid)!important}
+
+/* ── HAMBURGER ── */
+.hamburger{
+  display:none;flex-direction:column;justify-content:center;
+  align-items:center;gap:5px;
+  width:40px;height:40px;background:none;border:none;
+  cursor:pointer;padding:4px;border-radius:8px;
+  transition:.2s;
+}
+.hamburger span{
+  display:block;width:22px;height:2px;
+  background:var(--dark);border-radius:2px;
+  transition:transform .3s ease, opacity .3s ease;
+}
+.hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.active span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ── MOBILE DRAWER ── */
+.mobile-menu{
+  position:fixed;top:64px;right:0;bottom:0;
+  width:min(300px,85vw);
+  background:var(--white);
+  border-left:1px solid var(--border);
+  z-index:999;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  padding:32px 24px;
+  display:flex;flex-direction:column;
+}
+.mobile-menu.open{transform:translateX(0)}
+.mobile-menu nav{display:flex;flex-direction:column;gap:4px}
+.mobile-menu nav a{
+  font-family:'Syne',sans-serif;font-weight:600;font-size:1.05rem;
+  color:var(--dark);padding:14px 16px;border-radius:12px;
+  border-bottom:1px solid var(--border);transition:.2s;
+}
+.mobile-menu nav a:last-child{border-bottom:none}
+.mobile-menu nav a:hover{background:var(--off-white)}
+.mobile-cta{
+  background:var(--brown)!important;color:#fff!important;
+  border-bottom:none!important;margin-top:16px;text-align:center;
+}
+.mobile-overlay{
+  display:none;position:fixed;inset:0;top:64px;
+  background:rgba(0,0,0,0.4);z-index:998;
+}
+.mobile-overlay.open{display:block}
+
+/* ── SECTION UTILITIES ── */
+.section-label{
+  font-size:0.78rem;font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--brown);
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+}
+.section-label::after{content:"";flex:1;height:1px;background:var(--border);max-width:60px}
+.section-h2{
+  font-size:clamp(1.6rem,4vw,2.8rem);font-weight:800;
+  line-height:1.1;letter-spacing:-0.02em;margin-bottom:20px;
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.rounded-img{border-radius:20px;overflow:hidden;aspect-ratio:4/3}
+.rounded-img img{width:100%;height:100%;object-fit:cover}
+.body-text p{font-size:1rem;color:var(--mid);line-height:1.75;margin-bottom:14px}
+.pad-section{padding:80px 24px}
+
+/* ── PAGE HERO (inner pages) ── */
+.page-hero{
+  margin-top:64px;height:60vh;min-height:320px;
+  position:relative;overflow:hidden;display:flex;align-items:flex-end;
+}
+.page-hero-bg{position:absolute;inset:0}
+.page-hero-bg img{width:100%;height:100%;object-fit:cover}
+.page-hero-bg::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(20,8,4,0.85) 0%,rgba(20,8,4,0.2) 60%,transparent 100%);
+}
+.page-hero-content{
+  position:relative;z-index:2;
+  padding:40px 24px;max-width:1200px;width:100%;margin:0 auto;
+}
+.page-hero-content h1{
+  font-size:clamp(2rem,6vw,5rem);font-weight:800;
+  color:#fff;line-height:1.0;letter-spacing:-0.03em;
+}
+.page-hero-content p{
+  color:rgba(255,255,255,0.75);font-size:1rem;
+  margin-top:14px;max-width:520px;line-height:1.6;
+}
+
+/* ── CARD GRID ── */
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+.info-card{border-radius:18px;overflow:hidden}
+.info-card-h{padding:32px 32px 16px;display:flex;align-items:flex-start;justify-content:space-between}
+.info-card-h h3{font-size:1.3rem;font-weight:800}
+.card-num{font-size:3rem;font-weight:800;opacity:0.1;line-height:1;flex-shrink:0;padding-left:12px}
+.info-card-b{padding:0 32px 32px}
+.info-card-b p{font-size:0.93rem;line-height:1.75;opacity:0.85}
+.card-cream-bg{background:var(--cream);color:var(--dark)}
+.card-brown-bg{background:var(--brown);color:#fff}
+
+/* ── PARTNERS CAROUSEL ── */
+.partners-section{
+  padding:60px 0;border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.partners-label{
+  text-align:center;font-size:0.8rem;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--mid);margin-bottom:28px;
+}
+.carousel-wrap{overflow:hidden}
+.carousel{display:flex;gap:28px;align-items:center;white-space:nowrap}
+.carousel .logo{flex:0 0 auto;display:flex;align-items:center;justify-content:center;height:52px;padding:0 12px}
+.carousel .logo img{max-height:40px;max-width:120px;object-fit:contain;filter:grayscale(1);opacity:.45;transition:.2s}
+.carousel .logo img:hover{filter:none;opacity:1}
+
+/* ── FOOTER ── */
+footer{background:var(--footer-dark);color:rgba(255,255,255,0.65);padding:56px 24px 28px}
+.footer-top{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr;
+  gap:40px;margin-bottom:40px;
+}
+.footer-brand h4{
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;
+  color:#fff;margin-bottom:12px;
+}
+.footer-brand p{font-size:0.88rem;line-height:1.6}
+.f-col-title{
+  font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:rgba(255,255,255,0.35);margin-bottom:14px;
+}
+.f-col a,.f-col p{display:block;font-size:0.87rem;margin-bottom:8px;transition:.15s}
+.f-col a:hover{color:#fff}
+.footer-bottom{
+  max-width:1200px;margin:0 auto;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:20px;display:flex;align-items:center;
+  justify-content:space-between;font-size:0.78rem;
+  flex-wrap:wrap;gap:10px;color:rgba(255,255,255,0.4);
+}
+
+/* ── RESPONSIVE: TABLET ── */
+@media(max-width:900px){
+  .two-col{grid-template-columns:1fr;gap:40px}
+  .card-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+}
+
+/* ── RESPONSIVE: MOBILE ── */
+@media(max-width:640px){
+  /* Show hamburger, hide desktop links */
+  .hamburger{display:flex}
+  .nav-links{display:none}
+
+  .wrap{padding:0 16px}
+  .pad-section{padding:56px 16px}
+
+  .page-hero{height:50vh;min-height:280px}
+  .page-hero-content{padding:28px 16px}
+  .page-hero-content h1{font-size:clamp(1.8rem,8vw,3rem)}
+
+  .section-h2{font-size:clamp(1.4rem,6vw,2rem)}
+
+  .footer-top{grid-template-columns:1fr;gap:28px}
+  .footer-bottom{flex-direction:column;align-items:flex-start;gap:6px}
+}
+</style>
+<style>
+/* ── HOME HERO ── */
+.hero{
+  margin-top:64px;min-height:calc(100vh - 64px);
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:stretch;overflow:hidden;
+}
+.hero-left{
+  padding:72px 48px;display:flex;flex-direction:column;
+  justify-content:center;background:var(--white);
+  /* prevent overflow on this side */
+  min-width:0;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--cream);border:1px solid var(--border);
+  border-radius:999px;padding:6px 16px;font-size:0.82rem;
+  font-weight:500;color:var(--brown);margin-bottom:24px;
+  width:fit-content;max-width:100%;
+}
+.hero-tag span{width:6px;height:6px;border-radius:50%;background:var(--brown);display:block;flex-shrink:0}
+.hero-h1{
+  font-size:clamp(2.4rem,4.5vw,5.2rem);font-weight:800;
+  line-height:1.0;letter-spacing:-0.03em;color:var(--dark);
+  /* stop text from breaking layout */
+  overflow-wrap:break-word;
+}
+.inline-img{
+  display:inline-block;
+  width:clamp(52px,6.5vw,110px);
+  height:clamp(32px,4vw,72px);
+  border-radius:8px;overflow:hidden;
+  vertical-align:middle;margin:0 6px;
+  position:relative;top:-3px;flex-shrink:0;
+}
+.inline-img img{width:100%;height:100%;object-fit:cover}
+.hero-sub{
+  font-size:0.97rem;color:var(--mid);line-height:1.65;
+  max-width:420px;margin:24px 0 32px;
+}
+.hero-stats{
+  display:flex;gap:24px;flex-wrap:wrap;
+  border-top:1px solid var(--border);padding-top:24px;
+}
+.stat-item .num{font-size:1.8rem;font-weight:800;color:var(--brown)}
+.stat-item .lbl{font-size:0.8rem;color:var(--mid);margin-top:2px}
+
+.hero-right{display:grid;grid-template-rows:1fr 1fr;overflow:hidden}
+.hero-img{overflow:hidden;position:relative}
+.hero-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.hero-img:hover img{transform:scale(1.04)}
+.hero-caption{
+  position:absolute;bottom:14px;left:14px;right:14px;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);
+  border-radius:10px;padding:9px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:0.8rem;font-weight:500;
+}
+.caption-link{
+  width:26px;height:26px;border-radius:50%;background:var(--brown);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:0.85rem;flex-shrink:0;
+}
+
+/* ── PILLS ── */
+.pills-bar{
+  background:var(--off-white);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:16px 24px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+}
+.pill{
+  display:flex;align-items:center;gap:8px;background:var(--white);
+  border:1px solid var(--border);border-radius:999px;
+  padding:9px 18px;font-size:0.83rem;font-weight:500;transition:.2s;
+  white-space:nowrap;
+}
+.pill:hover{border-color:var(--brown);color:var(--brown);transform:translateY(-1px)}
+.pill-dot{width:7px;height:7px;border-radius:50%;background:#C4884A;flex-shrink:0}
+
+/* ── STATS STRIP ── */
+.stats-strip{background:var(--brown);padding:56px 24px;display:flex;justify-content:center}
+.stats-grid{
+  max-width:900px;width:100%;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:16px;text-align:center;
+}
+.stat-box .big{font-size:2.4rem;font-weight:800;color:#fff}
+.stat-box .desc{font-size:0.82rem;color:rgba(255,255,255,0.6);margin-top:4px}
+
+/* ── FOCUS CARDS ── */
+.focus-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
+.focus-card{border-radius:16px;padding:36px;position:relative;overflow:hidden}
+.focus-card.cream{background:var(--cream);color:var(--dark)}
+.focus-card.dark{background:var(--brown);color:#fff}
+.focus-card h3{font-size:1.3rem;font-weight:800;margin-bottom:12px}
+.focus-card p{font-size:0.93rem;line-height:1.7;opacity:0.85}
+.focus-num{position:absolute;right:20px;top:16px;font-size:3.5rem;font-weight:800;opacity:0.08;line-height:1}
+
+/* ── PROJECT CARDS ── */
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:32px}
+.proj-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);transition:.25s}
+.proj-card:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(107,58,31,0.12)}
+.proj-img{height:190px;overflow:hidden}
+.proj-img img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.proj-card:hover .proj-img img{transform:scale(1.06)}
+.proj-body{padding:18px;background:var(--white)}
+.proj-tag{
+  display:inline-block;font-size:0.73rem;font-weight:600;
+  color:var(--brown);background:var(--cream);
+  border-radius:999px;padding:3px 11px;margin-bottom:8px;
+}
+.proj-title{font-weight:700;font-size:1rem;margin-bottom:6px}
+.proj-desc{font-size:0.86rem;color:var(--mid);line-height:1.5}
+
+/* ── CTA BAND ── */
+.cta-band{background:var(--brown);padding:72px 24px}
+.cta-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.cta-inner h2{
+  font-size:clamp(1.6rem,3vw,3rem);font-weight:800;
+  color:#fff;line-height:1.1;letter-spacing:-0.02em;
+}
+.cta-inner > div > p{color:rgba(255,255,255,0.65);line-height:1.7;margin-top:14px}
+.cta-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-white{
+  display:inline-flex;align-items:center;gap:10px;background:#fff;
+  color:var(--brown);font-weight:700;font-size:0.9rem;
+  padding:12px 24px;border-radius:999px;transition:.2s;
+}
+.btn-white .arr{width:26px;height:26px;border-radius:50%;background:var(--brown);color:#fff;display:flex;align-items:center;justify-content:center}
+.btn-white:hover{background:var(--cream);transform:translateY(-2px)}
+.btn-outline-w{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(255,255,255,0.35);color:#fff;
+  font-weight:600;font-size:0.9rem;
+  padding:12px 24px;border-radius:999px;transition:.2s;
+}
+.btn-outline-w:hover{background:rgba(255,255,255,0.1)}
+
+/* ── HOME RESPONSIVE ── */
+@media(max-width:900px){
+  .proj-grid{grid-template-columns:1fr 1fr}
+  .cta-inner{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  /* Stack hero vertically */
+  .hero{
+    grid-template-columns:1fr;
+    min-height:auto;
+  }
+  .hero-left{
+    padding:48px 16px 40px;
+    order:1;
+  }
+  .hero-right{
+    order:2;
+    grid-template-rows:200px 200px;
+    grid-template-columns:1fr 1fr;
+  }
+  .hero-h1{
+    font-size:clamp(2rem,10vw,3rem);
+    letter-spacing:-0.02em;
+  }
+  .inline-img{
+    width:clamp(44px,11vw,64px);
+    height:clamp(28px,7vw,44px);
+  }
+  .hero-sub{max-width:100%;font-size:0.93rem}
+  .hero-stats{gap:16px}
+  .stat-item .num{font-size:1.5rem}
+
+  .pills-bar{padding:14px 16px;gap:8px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}
+  .pill{font-size:0.8rem;padding:8px 14px}
+
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .stat-box .big{font-size:1.8rem}
+
+  .focus-cards{grid-template-columns:1fr}
+  .proj-grid{grid-template-columns:1fr}
+
+  .cta-band{padding:48px 16px}
+  .cta-btns{flex-direction:column;align-items:stretch}
+  .btn-white,.btn-outline-w{justify-content:center}
+}
+</style>
+</head>
+<body>
+<header class="nav" id="site-nav">
+  <div class="nav-logo"><a href="index.html"><img src="assets/TSHAD Logo.png" alt="TSHAD"></a></div>
+  <!-- Desktop links -->
+  <nav class="nav-links" id="nav-links">
+    <a href="index.html">Home</a>
+    <a href="mission.html">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="mission.html">Mission</a>
+    <a href="connect.html">Connect</a>
+    <a href="connect.html" class="nav-cta">Contact Us &#8594;</a>
+  </nav>
+  <!-- Hamburger button (mobile only) -->
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+<!-- Mobile drawer -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="mission.html">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="mission.html">Mission</a>
+    <a href="connect.html">Connect</a>
+    <a href="connect.html" class="mobile-cta">Contact Us &#8594;</a>
+  </nav>
+</div>
+<div class="mobile-overlay" id="mobile-overlay"></div>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag"><span></span> Empowering Disability &#8212; Since 1990</div>
+    <h1 class="hero-h1">YOUR <span class="inline-img"><img src="assets/img5.png" alt=""></span> VISION.</h1>
+    <h1 class="hero-h1">OUR <span class="inline-img"><img src="assets/img3.png" alt=""></span> PURPOSE.</h1>
+    <p class="hero-sub">Empowering people with disabilities through income-generating projects, expert skills programmes, and community-led pathways to self-sustainability.</p>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="num">35+</div><div class="lbl">Years of service</div></div>
+      <div class="stat-item"><div class="num">10k+</div><div class="lbl">Lives impacted</div></div>
+      <div class="stat-item"><div class="num">12+</div><div class="lbl">Active projects</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img">
+      <img src="assets/img7.png" alt="Recycling Initiative">
+      <div class="hero-caption">
+        <span><strong>"Recycling Initiative"</strong> &#8901; Tembisa</span>
+        <a href="projects.html" class="caption-link">&#8599;</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <img src="assets/img4.png" alt="Wheelchair Repairs">
+      <div class="hero-caption">
+        <span><strong>"Wheelchair Repairs"</strong> &#8901; Community</span>
+        <a href="projects.html" class="caption-link">&#8599;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="pills-bar">
+  <a href="projects.html" class="pill"><span class="pill-dot"></span> Project Portfolio</a>
+  <a href="mission.html" class="pill"><span class="pill-dot"></span> Service Offerings</a>
+  <a href="connect.html" class="pill"><span class="pill-dot"></span> Testimonials</a>
+  <a href="connect.html" class="pill"><span class="pill-dot"></span> Contact &amp; Inquiry</a>
+</div>
+
+<section class="pad-section">
+  <div class="wrap two-col">
+    <div class="body-text">
+      <div class="section-label">Who We Are</div>
+      <h2 class="section-h2">T-SHAD</h2>
+      <p>The Tembisa Self Help Association of the Disabled (TSHAD) is a community-based non-profit organisation with cross-disability representation, established in 1990 by Mr. Manas Buswane Malinga.</p>
+      <p>We envision a future where individuals with disabilities are socially integrated, economically active, and financially self-sustainable.</p>
+      <p><em>Empowering people with disabilities is about celebrating their strengths and unique perspectives.</em></p>
+    </div>
+    <div class="rounded-img"><img src="assets/img5.png" alt="TSHAD members"></div>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="stats-grid">
+    <div class="stat-box"><div class="big">350+</div><div class="desc">Members supported</div></div>
+    <div class="stat-box"><div class="big">65+</div><div class="desc">Partners &amp; volunteers</div></div>
+    <div class="stat-box"><div class="big">12+</div><div class="desc">Active programmes</div></div>
+    <div class="stat-box"><div class="big">100%</div><div class="desc">Community-driven</div></div>
+  </div>
+</div>
+
+<section class="pad-section" style="background:var(--off-white)">
+  <div class="wrap">
+    <div class="section-label">Our Foundation</div>
+    <h2 class="section-h2">Vision Forge</h2>
+    <p style="max-width:580px;color:var(--mid);line-height:1.7">Where dreams take shape &#8212; creating unforgettable opportunities for the disabled community with passion, determination, and community spirit.</p>
+    <div class="focus-cards">
+      <div class="focus-card cream">
+        <div class="focus-num">01</div>
+        <h3>Vision Snapshot</h3>
+        <p>To envision a future where individuals with disabilities are socially integrated, economically active, and financially self-sustainable. We strive to break barriers and provide real opportunities for social interaction and economic empowerment.</p>
+      </div>
+      <div class="focus-card dark">
+        <div class="focus-num" style="color:#fff">02</div>
+        <h3>Mission Snapshot</h3>
+        <p>To identify and enhance socio-economic livelihood opportunities for people with disabilities and actively engage in activities through the creation of viable and sustainable income-generating projects.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pad-section">
+  <div class="wrap">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px">
+      <div>
+        <p style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:10px">Our Projects</p>
+        <h2 class="section-h2" style="margin-bottom:4px">Building Tomorrow&#8217;s Inclusion<br>with Purpose.</h2>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button style="width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:1rem;transition:.2s" onmouseover="this.style.background='var(--brown)';this.style.borderColor='var(--brown)';this.style.color='#fff'" onmouseout="this.style.background='var(--white)';this.style.borderColor='var(--border)';this.style.color='inherit'">&#8592;</button>
+        <button style="width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:1rem;transition:.2s" onmouseover="this.style.background='var(--brown)';this.style.borderColor='var(--brown)';this.style.color='#fff'" onmouseout="this.style.background='var(--white)';this.style.borderColor='var(--border)';this.style.color='inherit'">&#8594;</button>
+      </div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="proj-img"><img src="assets/img7.png" alt="Recycling"></div>
+        <div class="proj-body">
+          <span class="proj-tag">Income-Generating</span>
+          <div class="proj-title">Recycling Initiative</div>
+          <div class="proj-desc">Collection and processing of paper, boxes, plastic, and food waste to manure &#8212; creating sustainable livelihoods.</div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-img"><img src="assets/img4.png" alt="Wheelchair Repairs"></div>
+        <div class="proj-body">
+          <span class="proj-tag">Community Support</span>
+          <div class="proj-title">Wheelchair Repairs</div>
+          <div class="proj-desc">Servicing and loaning of mobility aids to members, walk-in clients, and hospital-referred individuals.</div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-img"><img src="assets/img8.png" alt="Lemon Tree Project"></div>
+        <div class="proj-body">
+          <span class="proj-tag">Environmental</span>
+          <div class="proj-title">Lemon Tree Project</div>
+          <div class="proj-desc">101 lemon trees planted on the property to create a sustainable, long-term income stream for members.</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center">
+      <a href="projects.html" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:11px 22px;font-size:0.88rem;font-weight:500;font-family:'Syne',sans-serif;transition:.2s" onmouseover="this.style.borderColor='var(--brown)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='inherit'">View all projects &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <div class="cta-inner">
+    <div>
+      <p style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:14px">Support Our Work</p>
+      <h2>Building a Future of<br>Inclusion with Heart.</h2>
+      <p>The programmes TSHAD runs include residential, community, industrial, and development projects &#8212; all powered by people with disabilities for the community.</p>
+    </div>
+    <div class="cta-btns">
+      <a href="connect.html" class="btn-white"><span>Donate &amp; Support</span><span class="arr">&#8594;</span></a>
+      <a href="projects.html" class="btn-outline-w">Browse services &#8594;</a>
+    </div>
+  </div>
+</div>
+
+<section class="partners-section">
+  <div class="partners-label">Our Partners &amp; Supporters</div>
+  <div class="carousel-wrap wrap">
+    <div id="carousel" class="carousel">
+      <div class="logo"><img src="assets/clean-city-logo-h1.png" alt="Clean City"></div>
+      <div class="logo"><img src="assets/earthlife-africa-footer-logo.png" alt="Earthlife Africa"></div>
+      <div class="logo"><img src="assets/greenbusinesscollege.png" alt="Green Business College"></div>
+      <div class="logo"><img src="assets/logo-agriseta.png" alt="AgriSETA"></div>
+      <div class="logo"><img src="assets/Logo_MFT.png" alt="MFT"></div>
+      <div class="logo"><img src="assets/Pasted image.png" alt="Partner"></div>
+      <div class="logo"><img src="assets/Phakisa-Logo-ColourBG.png" alt="Phakisa"></div>
+      <div class="logo"><img src="assets/td01.png" alt="TD01"></div>
+      <div class="logo"><img src="assets/trees-logo.png" alt="Trees"></div>
+      <div class="logo"><img src="assets/TSHAD Logo.png" alt="TSHAD"></div>
+      <div class="logo"><img src="assets/clean-city-logo-h1.png" alt="Clean City"></div>
+      <div class="logo"><img src="assets/earthlife-africa-footer-logo.png" alt="Earthlife Africa"></div>
+      <div class="logo"><img src="assets/greenbusinesscollege.png" alt="Green Business College"></div>
+      <div class="logo"><img src="assets/logo-agriseta.png" alt="AgriSETA"></div>
+      <div class="logo"><img src="assets/Logo_MFT.png" alt="MFT"></div>
+      <div class="logo"><img src="assets/Pasted image.png" alt="Partner"></div>
+      <div class="logo"><img src="assets/Phakisa-Logo-ColourBG.png" alt="Phakisa"></div>
+      <div class="logo"><img src="assets/td01.png" alt="TD01"></div>
+      <div class="logo"><img src="assets/trees-logo.png" alt="Trees"></div>
+      <div class="logo"><img src="assets/TSHAD Logo.png" alt="TSHAD"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <h4>TSHAD &#8212; Building a Future of Inclusion</h4>
+      <p>A community-based initiative with cross-disability representation, established in 1990.</p>
+    </div>
+    <div class="f-col">
+      <div class="f-col-title">Company</div>
+      <a href="index.html">Home</a>
+      <a href="mission.html">About Us</a>
+      <a href="projects.html">Projects</a>
+      <a href="connect.html">Connect</a>
+    </div>
+    <div class="f-col">
+      <div class="f-col-title">Contact</div>
+      <p>484 Dan Tloome Rd, Tembisa, 1632</p>
+      <p>072 650 9747 / 061 589 9411</p>
+      <a href="mailto:Info@tshad.org">Info@tshad.org</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&#8212; OUR SERVICES</span>
+    <span>&#169; <span id="yr"></span> Tembisa Self Help Association of the Disabled.</span>
+    <span>www.tshad.org</span>
+  </div>
+</footer>
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+const carousel=document.getElementById('carousel');
+let pos=0,speed=0.5,paused=false;
+carousel.addEventListener('mouseenter',()=>paused=true);
+carousel.addEventListener('mouseleave',()=>paused=false);
+carousel.addEventListener('touchstart',()=>paused=true,{passive:true});
+carousel.addEventListener('touchend',()=>setTimeout(()=>paused=false,2000),{passive:true});
+function loop(){if(!paused){pos-=speed;const half=carousel.scrollWidth/2;if(Math.abs(pos)>=half)pos=0;carousel.style.transform='translateX('+pos+'px)'}requestAnimationFrame(loop)}
+window.addEventListener('load',loop);
+</script>
+<script>
+(function(){
+  const btn = document.getElementById('hamburger');
+  const menu = document.getElementById('mobile-menu');
+  const overlay = document.getElementById('mobile-overlay');
+  function open(){
+    menu.classList.add('open');
+    overlay.classList.add('open');
+    btn.setAttribute('aria-expanded','true');
+    btn.classList.add('active');
+    document.body.style.overflow='hidden';
+  }
+  function close(){
+    menu.classList.remove('open');
+    overlay.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
+    btn.classList.remove('active');
+    document.body.style.overflow='';
+  }
+  btn.addEventListener('click',()=>menu.classList.contains('open')?close():open());
+  overlay.addEventListener('click',close);
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+})();
+</script>
+</body>
+</html>
